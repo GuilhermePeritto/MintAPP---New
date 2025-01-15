@@ -9,6 +9,15 @@ const config: Config = {
     "*.{js,ts,jsx,tsx,mdx}"
   ],
   theme: {
+	screens: {
+		smm: "320px",
+		sm: "640px",
+		md: "768px",
+		lg: "1024px",
+		xl: "1280px",
+		notebook: "1536px",
+		desktop: "1920px",
+	  },
   	extend: {
   		colors: {
   			background: 'hsl(var(--background))',

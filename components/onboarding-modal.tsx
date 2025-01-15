@@ -1,13 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Label } from "@/components/ui/label"
-import { ChevronLeft, ChevronRight, Globe, Palette, Gamepad, BookOpen, CreditCard, Clipboard, Star } from 'lucide-react'
 import { useLanguage } from '@/components/language-provider'
+import { Button } from "@/components/ui/button"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Label } from "@/components/ui/label"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { useThemeToggle } from '@/hooks/useThemeToggle'
+import { BookOpen, ChevronLeft, ChevronRight, Clipboard, CreditCard, Gamepad, Globe, Palette, Star } from 'lucide-react'
+import { useEffect, useState } from 'react'
 
 const ONBOARDING_STEPS = [
   'language',
@@ -173,7 +173,7 @@ export function OnboardingModal() {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[420px] smm:max-w-[85%] rounded-lg">
         <DialogHeader>
           <DialogTitle>{t('welcome_to_app')}</DialogTitle>
         </DialogHeader>
