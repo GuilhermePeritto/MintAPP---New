@@ -1,16 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import Image from 'next/image'
+import { useLanguage } from '@/components/language-provider'
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { useLanguage } from '@/components/language-provider'
-import { Star, MapPin, Clock, Check, Car, LockKeyhole, ShowerHeadIcon as Shower, ClubIcon as Football, Lightbulb, Users, DollarSign, ChevronLeft, CalendarIcon } from 'lucide-react'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Carousel,
   CarouselContent,
@@ -18,16 +12,22 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
-import { Textarea } from "@/components/ui/textarea"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { format } from 'date-fns'
-import { cn } from "@/lib/utils"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Textarea } from "@/components/ui/textarea"
+import { cn } from "@/lib/utils"
+import { format } from 'date-fns'
+import { CalendarIcon, Check, ChevronLeft, Clock, DollarSign, MapPin, Star, Users } from 'lucide-react'
+import Image from 'next/image'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 // Mock facility data - in a real app, this would come from your API
 const MOCK_FACILITY = {
@@ -85,7 +85,7 @@ export default function BookingPage({ params }: { params: { facilityId: string }
   }
 
   return (
-    <div className="container mx-auto px-4 py-6">
+    <div className="mx-auto px-8 sm:px-4 md:px-6 py-6">
       <div className="flex items-center mb-6 space-x-4">
         <Button
           variant="ghost"
