@@ -1,12 +1,12 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useLanguage } from '@/components/language-provider'
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { useLanguage } from '@/components/language-provider'
 import { Search } from 'lucide-react'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 const categories = [
   "Soccer Fields",
@@ -49,7 +49,7 @@ export default function SearchPage() {
   )
 
   return (
-    <div className="container mx-auto p-4 space-y-6">
+    <div className="mx-auto px-5 sm:px-4 md:px-6 space-y-6">
       <h1 className="text-2xl font-bold mb-4">{t('search_facilities')}</h1>
       
       <div className="relative">

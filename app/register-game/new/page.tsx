@@ -192,7 +192,7 @@ export default function NewGame() {
   }
 
   return (
-    <div className="container mx-auto p-4 space-y-6">
+    <div className="mx-auto px-5 sm:px-4 md:px-6 space-y-6">
       <EditNotification editCount={edits.length} onUndo={undoLastEdit} />
       <div className="flex items-center">
         <Button
@@ -284,10 +284,11 @@ export default function NewGame() {
             </TabsContent>
 
             <TabsContent value="players" className="space-y-6">
-              <div className="flex justify-end">
+              <div className="flex justify-end w-full">
                 <Button
                   onClick={() => setIsAddingPlayer(!isAddingPlayer)}
                   variant="outline"
+                  className='w-full'
                 >
                   {isAddingPlayer ? t('cancel') : t('add_player')}
                   {!isAddingPlayer && <Plus className="w-4 h-4 ml-2" />}

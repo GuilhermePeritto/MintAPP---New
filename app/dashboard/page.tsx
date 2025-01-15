@@ -1,25 +1,17 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import Image from 'next/image'
-import { GlowingCard } from "@/components/ui/glowing-card"
-import { CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Search, Star, Gamepad, Trophy, Users, Zap } from 'lucide-react'
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel"
 import { useLanguage } from '@/components/language-provider'
 import { OnboardingModal } from '@/components/onboarding-modal'
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { GlowingCard } from "@/components/ui/glowing-card"
+import { Input } from "@/components/ui/input"
 import { Progress } from "@/components/ui/progress"
-import { Card } from "@/components/ui/card";
+import { Gamepad, Search, Star, Trophy, Users, Zap } from 'lucide-react'
+import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 interface Facility {
   id: number
@@ -66,7 +58,7 @@ export default function Dashboard() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-background text-foreground pb-20 px-3 sm:px-4 md:px-6">
+    <div className="min-h-screen bg-background text-foreground pb-20 px-5 sm:px-4 md:px-6">
       {/* Player Stats */}
       <GlowingCard className="bg-primary/5 p-4 mb-6" glowColor="rgba(0, 128, 255, 0.2)">
         <h2 className="text-xl font-bold mb-2 text-primary">{t('athlete_stats')}</h2>
@@ -94,7 +86,7 @@ export default function Dashboard() {
       </GlowingCard>
 
       {/* Search */}
-      <div className="px-4 mb-6">
+      <div className="mb-6">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
           <Input
@@ -108,7 +100,7 @@ export default function Dashboard() {
       </div>
 
       {/* Categories */}
-      <div className="px-4 space-y-6">
+      <div className="space-y-6">
         {categories.map((category, index) => (
           <div key={`category-${index}`}>
             <h2 className="text-lg font-bold mb-4 text-primary">{category}</h2>
@@ -144,7 +136,7 @@ export default function Dashboard() {
       </div>
 
       {/* Featured Facility */}
-      <div className="mt-8 px-4">
+      <div className="mt-8">
         <h2 className="text-lg font-bold mb-4 text-primary">{t('featured_facility')}</h2>
         <Card className="bg-gradient-to-r from-primary/20 via-primary/40 to-primary/20 dark:from-primary/40 dark:via-primary/60 dark:to-primary/40">
           <CardContent className="p-4 sm:p-6">

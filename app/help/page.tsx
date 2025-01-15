@@ -1,14 +1,14 @@
 'use client'
 
-import { useState } from 'react'
 import { useLanguage } from '@/components/language-provider'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
-import { AlertCircle, CheckCircle2, Search } from 'lucide-react'
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { CheckCircle2, Search } from 'lucide-react'
+import { useState } from 'react'
 
 export default function HelpSupport() {
   const { t } = useLanguage()
@@ -37,7 +37,7 @@ export default function HelpSupport() {
   }
 
   return (
-    <div className="container mx-auto p-4 space-y-6">
+    <div className="mx-auto px-5 sm:px-4 md:px-6 space-y-6">
       <h1 className="text-2xl font-bold">{t('help_and_support')}</h1>
 
       <Card>

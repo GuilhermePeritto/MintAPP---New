@@ -108,7 +108,7 @@ export default function EditReservation({ params }: { params: Promise<{ id: stri
   }
 
   return (
-    <div className="container mx-auto p-4 space-y-6">
+    <div className="mx-auto px-5 sm:px-4 md:px-6 space-y-6">
       <EditNotification editCount={edits.length} onUndo={undoLastEdit} />
       <div className="flex items-center">
         <Button

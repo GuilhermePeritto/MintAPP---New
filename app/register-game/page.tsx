@@ -1,11 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 import { useLanguage } from '@/components/language-provider'
-import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
 import { ChevronLeft, Plus } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 interface GameResult {
   id: string
@@ -61,21 +61,19 @@ export default function GameResults() {
   }, [router])
 
   return (
-    <div className="container mx-auto p-4 space-y-6">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center">
-          {typeof window !== 'undefined' && window.innerWidth <= 640 && (
-            <Button
-              variant="ghost"
-              className="mr-2 px-0"
-              onClick={() => router.back()}
-            >
-              <ChevronLeft className="h-6 w-6" />
-            </Button>
-          )}
+    <div className="mx-auto px-5 sm:px-4 md:px-6 space-y-6">
+       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+        <div className="flex items-center mb-4 sm:mb-0">
+          <Button
+            variant="ghost"
+            className="mr-2 px-0"
+            onClick={() => router.back()}
+          >
+            <ChevronLeft className="h-6 w-6" />
+          </Button>
           <h1 className="text-2xl font-bold">{t('game_results')}</h1>
         </div>
-        <Button onClick={() => router.push('/register-game/new')} className="w-auto">
+        <Button onClick={() => router.push('/register-game/new')} className="w-full sm:w-auto">
           <Plus className="mr-2 h-4 w-4" /> {t('add_game_results')}
         </Button>
       </div>

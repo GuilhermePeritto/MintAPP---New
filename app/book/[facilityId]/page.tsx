@@ -85,7 +85,7 @@ export default function BookingPage({ params }: { params: { facilityId: string }
   }
 
   return (
-    <div className="mx-auto px-8 sm:px-4 md:px-6 py-6">
+    <div className="mx-auto px-5 sm:px-4 md:px-6 py-6">
       <div className="flex items-center mb-6 space-x-4">
         <Button
           variant="ghost"
@@ -110,12 +110,12 @@ export default function BookingPage({ params }: { params: { facilityId: string }
                 <CarouselContent>
                   {FACILITY_IMAGES.map((image, index) => (
                     <CarouselItem key={index}>
-                      <div className="relative h-64 w-full">
+                      <div className="relative h-64 w-full overflow-hidden rounded-lg">
                         <Image
                           src={image || "/placeholder.svg"}
                           alt={`${facility.name} - ${t('image')} ${index + 1}`}
                           fill
-                          className="object-cover"
+                          className="object-cover rounded-lg"
                         />
                       </div>
                     </CarouselItem>

@@ -1,6 +1,6 @@
 'use client'
 
-import React, { createContext, useContext, useState, useEffect } from 'react'
+import React, { createContext, useContext, useEffect, useState } from 'react'
 
 type Language = 'en' | 'pt'
 
@@ -328,6 +328,22 @@ const translations = {
     'xp_and_achievements': 'XP and Achievements',
     'modify_reservation': 'Modify Reservation',
     'facility': 'Facility',
+    'game_results': 'Game Results',
+    'home_team': 'Home Team',
+    'away_team': 'Away Team',
+    'select_position': 'Select Position',
+    'yellow_cards': 'Yellow Cards',
+    'red_cards': 'Red Cards',
+    'minutes_played': 'Minutes Played',
+    'rating': 'Rating',
+    'cancel': 'Cancel',
+    'basic_info': 'Basic Info',
+    'position_and_time': 'Position and Time',
+    'match_stats': 'Match Stats',
+    'add_new_player': 'Add New Player',
+    'yellow': 'Yellow',
+    'red': 'Red',
+    'avg_minutes': 'Avg. Minutes',
     'enter_game_notes': 'Enter any notes about the game here'
   },
   pt: {
@@ -636,7 +652,23 @@ const translations = {
     'court_number': 'Número da Quadra',
     'xp_and_achievements': 'XP e Conquistas',
     'modify_reservation': 'Modificar Reserva',
-    'facility':'Instalação',
+    'facility': 'Instalação',
+    'game_results': 'Resultados do Jogo',
+    'home_team': 'Time da Casa',
+    'away_team': 'Time Visitante',
+    'select_position': 'Selecionar Posição',
+    'yellow_cards': 'Cartões Amarelos',
+    'red_cards': 'Cartões Vermelhos',
+    'minutes_played': 'Minutos Jogados',
+    'rating': 'Avaliação',
+    'cancel': 'Cancelar',
+    'basic_info': 'Informações Básicas',
+    'position_and_time': 'Posição e Tempo',
+    'match_stats': 'Estatísticas da Partida',
+    'add_new_player': 'Adicionar Novo Jogador',
+    'yellow': 'Amarelo',
+    'red': 'Vermelho',
+    'avg_minutes': 'Média de Minutos',
     'enter_game_notes': 'Digite quaisquer notas sobre o jogo aqui'
   }
 }
@@ -666,4 +698,3 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     </LanguageContext.Provider>
   )
 }
-
