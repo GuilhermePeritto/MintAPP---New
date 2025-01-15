@@ -1,25 +1,21 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { EditNotification } from '@/components/edit-notification'
 import { useLanguage } from '@/components/language-provider'
-import { ChevronLeft, Plus, Save, Goal, Clock } from 'lucide-react'
-import { HandHelpingIcon as Assist } from 'lucide-react'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
-import { cn } from "@/lib/utils"
 import { useEditTracker } from '@/hooks/useEditTracker'
-import { EditNotification } from '@/components/edit-notification'
-import { Trash2 } from 'lucide-react'
+import { cn } from "@/lib/utils"
+import { HandHelpingIcon as Assist, ChevronLeft, Clock, Goal, Plus, Save, Trash2 } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 interface Player {
   id: string
@@ -55,20 +51,9 @@ const POSITIONS = [
 
 const RATINGS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
-// Mock function to fetch booking data
-const fetchBookingData = async (bookingId: string): Promise<Partial<GameResult>> => {
-  // In a real app, this would be an API call
-  return {
-    date: '2024-01-20',
-    facility: 'Central Arena',
-    homeTeam: 'Home Team',
-    awayTeam: 'Away Team',
-  }
-}
 
 export default function NewGame() {
   const router = useRouter()
-  const searchParams = useSearchParams()
   const { t } = useLanguage()
   const [gameResult, setGameResult] = useState<Partial<GameResult>>({
     date: new Date().toISOString().split('T')[0],
@@ -94,15 +79,6 @@ export default function NewGame() {
   const [isAddingPlayer, setIsAddingPlayer] = useState(false)
   const [validationError, setValidationError] = useState<string>('')
   const { edits, addEdit, undoLastEdit } = useEditTracker()
-
-  useEffect(() => {
-    const bookingId = searchParams.get('bookingId')
-    if (bookingId) {
-      fetchBookingData(bookingId).then(data => {
-        setGameResult(prevState => ({ ...prevState, ...data }))
-      })
-    }
-  }, [searchParams])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
