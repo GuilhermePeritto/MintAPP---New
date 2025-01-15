@@ -95,134 +95,152 @@ const MOCK_GAME_RESULTS = [
 ]
 
 export default function EditGame({ params }: { params: { id: string } }) {
-  const router = useRouter();
-  const { t } = useLanguage();
-  const [gameResult, setGameResult] = useState<GameResult | null>(null);
+  const router = useRouter()
+  const { t } = useLanguage()
+  const [gameResult, setGameResult] = useState<GameResult | null>(null)
   const [newPlayer, setNewPlayer] = useState<Partial<Player>>({
-    name: "",
-    number: "",
-    position: "",
+    name: '',
+    number: '',
+    position: '',
     goals: 0,
     assists: 0,
     yellowCards: 0,
     redCards: 0,
     minutesPlayed: 0,
     rating: 7,
-    teamSide: "home",
-  });
-  const [isAddingPlayer, setIsAddingPlayer] = useState(false);
-  const [validationError, setValidationError] = useState<string>("");
-  const { addEdit } = useEditTracker();
+    teamSide: 'home'
+  })
+  const [isAddingPlayer, setIsAddingPlayer] = useState(false)
+  const [validationError, setValidationError] = useState<string>('')
+  const { edits, addEdit, undoLastEdit } = useEditTracker()
 
   useEffect(() => {
-    const result = MOCK_GAME_RESULTS.find((game) => game.id === params.id);
+    const result = MOCK_GAME_RESULTS.find(game => game.id === params.id)
     if (!result) {
-      router.push("/register-game");
-      return;
+      router.push('/register-game')
+      return
     }
-    setGameResult(result);
-  }, [params.id, router]);
+    setGameResult(result)
+  }, [params.id, router])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    if (!gameResult) return;
-
-    setGameResult((prev) => {
-      if (!prev) return null;
-      const newState = { ...prev, [name]: value };
-      addEdit({
-        field: name,
-        oldValue: prev[name as keyof GameResult],
-        newValue: value,
-      });
-      return newState;
-    });
-  };
+    const { name, value } = e.target
+    if (gameResult) {
+      setGameResult(prev => {
+        const newState = { ...prev, [name]: value }
+        addEdit({ field: name, oldValue: prev[name as keyof typeof prev], newValue: value })
+        return newState
+      })
+    }
+  }
 
   const handlePlayerInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setNewPlayer((prev) => ({
+    const { name, value } = e.target
+    setNewPlayer(prev => ({
       ...prev,
-      [name]: ["goals", "assists", "yellowCards", "redCards", "minutesPlayed", "rating"].includes(name)
-        ? parseInt(value) || 0
-        : value,
-    }));
-  };
-
-  const validatePlayer = (player: Partial<Player>): boolean => {
-    if (!player.name?.trim()) {
-      setValidationError(t("player_name_required"));
-      return false;
-    }
-    if (!player.number?.trim()) {
-      setValidationError(t("player_number_required"));
-      return false;
-    }
-    if (!player.position) {
-      setValidationError(t("player_position_required"));
-      return false;
-    }
-    if (player.minutesPlayed && (player.minutesPlayed < 0 || player.minutesPlayed > 90)) {
-      setValidationError(t("invalid_minutes_played"));
-      return false;
-    }
-    setValidationError("");
-    return true;
-  };
+      [name]: name === 'goals' || name === 'assists' || name === 'yellowCards' || name === 'redCards' || name === 'minutesPlayed' || name === 'rating' ? parseInt(value) || 0 : value
+    }))
+  }
 
   const handleAddPlayer = () => {
-    if (!gameResult || !validatePlayer(newPlayer)) return;
+    if (!gameResult || !validatePlayer(newPlayer)) return
 
-    const newPlayerObj = {
-      id: Math.random().toString(36).substr(2, 9),
-      ...newPlayer,
-    };
-
-    setGameResult((prev) => {
-      if (!prev) return null;
-      const newPlayers = [...prev.players, newPlayerObj];
-      addEdit({ field: "players", oldValue: prev.players, newValue: newPlayers });
-      return { ...prev, players: newPlayers };
-    });
-
+    setGameResult(prev => {
+      const newPlayerObj = {
+        id: Math.random().toString(36).substr(2, 9),
+        name: newPlayer.name!,
+        number: newPlayer.number!,
+        position: newPlayer.position!,
+        goals: newPlayer.goals || 0,
+        assists: newPlayer.assists || 0,
+        yellowCards: newPlayer.yellowCards || 0,
+        redCards: newPlayer.redCards || 0,
+        minutesPlayed: newPlayer.minutesPlayed || 0,
+        rating: newPlayer.rating || 7,
+        teamSide: newPlayer.teamSide || 'home'
+      }
+      const newPlayers = [...prev.players, newPlayerObj]
+      addEdit({ field: 'players', oldValue: prev.players, newValue: newPlayers })
+      return { ...prev, players: newPlayers }
+    })
     setNewPlayer({
-      name: "",
-      number: "",
-      position: "",
+      name: '',
+      number: '',
+      position: '',
       goals: 0,
       assists: 0,
       yellowCards: 0,
       redCards: 0,
       minutesPlayed: 0,
       rating: 7,
-      teamSide: "home",
-    });
-    setIsAddingPlayer(false);
-  };
+      teamSide: 'home'
+    })
+    setIsAddingPlayer(false)
+  }
 
   const handleRemovePlayer = (playerId: string) => {
-    if (!gameResult) return;
+    if (!gameResult) return
+    setGameResult(prev => {
+      const newPlayers = prev.players.filter(player => player.id !== playerId)
+      addEdit({ field: 'players', oldValue: prev.players, newValue: newPlayers })
+      return { ...prev, players: newPlayers }
+    })
+  }
 
-    setGameResult((prev) => {
-      if (!prev) return null;
-      const newPlayers = prev.players.filter((player) => player.id !== playerId);
-      addEdit({ field: "players", oldValue: prev.players, newValue: newPlayers });
-      return { ...prev, players: newPlayers };
-    });
-  };
+  const handleUpdatePlayerStats = (playerId: string, field: keyof Player, value: string | number) => {
+    if (!gameResult) return
+    setGameResult(prev => {
+      const newPlayers = prev.players.map(player =>
+        player.id === playerId
+          ? { ...player, [field]: field === 'goals' || field === 'assists' || field === 'yellowCards' || field === 'redCards' || field === 'minutesPlayed' || field === 'rating' ? parseInt(value.toString()) || 0 : value }
+          : player
+      )
+      addEdit({ field: `player_${playerId}_${field}`, oldValue: prev.players.find(p => p.id === playerId)?.[field], newValue: value })
+      return { ...prev, players: newPlayers }
+    })
+  }
 
-  const calculateTeamStats = (teamSide: "home" | "away"): TeamStats => {
-    const teamPlayers = gameResult?.players.filter((p) => p.teamSide === teamSide) || [];
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    console.log('Updating game result:', gameResult)
+    router.push('/register-game')
+  }
+
+  const validatePlayer = (player: Partial<Player>): boolean => {
+    if (!player.name || player.name.trim() === '') {
+      setValidationError(t('player_name_required'))
+      return false
+    }
+    if (!player.number || player.number.trim() === '') {
+      setValidationError(t('player_number_required'))
+      return false
+    }
+    if (!player.position) {
+      setValidationError(t('player_position_required'))
+      return false
+    }
+    if (player.minutesPlayed && (player.minutesPlayed < 0 || player.minutesPlayed > 90)) {
+      setValidationError(t('invalid_minutes_played'))
+      return false
+    }
+    setValidationError('')
+    return true
+  }
+
+  const calculateTeamStats = (teamSide: 'home' | 'away'): TeamStats => {
+    const teamPlayers = gameResult.players.filter(p => p.teamSide === teamSide)
     return {
       goals: teamPlayers.reduce((sum, p) => sum + p.goals, 0),
       assists: teamPlayers.reduce((sum, p) => sum + p.assists, 0),
       yellowCards: teamPlayers.reduce((sum, p) => sum + p.yellowCards, 0),
       redCards: teamPlayers.reduce((sum, p) => sum + p.redCards, 0),
       totalMinutes: teamPlayers.reduce((sum, p) => sum + p.minutesPlayed, 0),
-    };
-  };
+    }
+  }
 
-  if (!gameResult) return null;
+  if (!gameResult) {
+    return null
+  }
 
   return (
     <div className="mx-auto px-5 sm:px-4 md:px-6 space-y-6">
