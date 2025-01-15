@@ -1,13 +1,13 @@
 'use client'
 
-import { useLanguage } from '@/components/language-provider'
-import { Button } from "@/components/ui/button"
+import { useState, useEffect } from 'react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
+import { Button } from "@/components/ui/button"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Label } from "@/components/ui/label"
+import { ChevronLeft, ChevronRight, Globe, Palette, Gamepad, BookOpen, CreditCard, Clipboard, Star } from 'lucide-react'
+import { useLanguage } from '@/components/language-provider'
 import { useThemeToggle } from '@/hooks/useThemeToggle'
-import { BookOpen, ChevronLeft, ChevronRight, Clipboard, CreditCard, Gamepad, Globe, Palette, Star } from 'lucide-react'
-import { useEffect, useState } from 'react'
 
 const ONBOARDING_STEPS = [
   'language',
@@ -173,24 +173,25 @@ export function OnboardingModal() {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className="sm:max-w-[420px] smm:max-w-[85%] rounded-lg">
+      <DialogContent className="sm:max-w-[425px] p-4 sm:p-6 md:p-8">
         <DialogHeader>
-          <DialogTitle>{t('welcome_to_app')}</DialogTitle>
+          <DialogTitle className="text-lg sm:text-xl">{t('welcome_to_app')}</DialogTitle>
         </DialogHeader>
-        <div className="py-4">
+        <div className="py-2 sm:py-4">
           {renderStepContent()}
         </div>
-        <div className="flex justify-between mt-4">
+        <div className="flex justify-between mt-4 sm:mt-6">
           <Button
             variant="outline"
             onClick={handlePrevious}
             disabled={currentStep === 0}
+            className="text-sm sm:text-base"
           >
-            <ChevronLeft className="mr-2 h-4 w-4" /> {t('previous')}
+            <ChevronLeft className="mr-1 sm:mr-2 h-4 w-4" /> {t('previous')}
           </Button>
-          <Button onClick={handleNext}>
+          <Button onClick={handleNext} className="text-sm sm:text-base">
             {currentStep === ONBOARDING_STEPS.length - 1 ? t('finish') : t('next')}
-            <ChevronRight className="ml-2 h-4 w-4" />
+            <ChevronRight className="ml-1 sm:ml-2 h-4 w-4" />
           </Button>
         </div>
       </DialogContent>

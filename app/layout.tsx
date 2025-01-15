@@ -1,8 +1,8 @@
 'use client'
 
 import { LanguageProvider } from '@/components/language-provider'
+import { MobileNav } from '@/components/mobile-nav'
 import { ThemeProvider } from "@/components/theme-provider"
-/* import type { Metadata } from 'next' */
 import { usePathname } from 'next/navigation'
 import { Header } from './components/header'
 import InstallPWA from './components/InstallPWA'
@@ -23,6 +23,7 @@ export default function RootLayout({
 }) {
   const pathname = usePathname()
   const showHeader = pathname !== '/' && !pathname.startsWith('/signup')
+  const showMobileNav = showHeader // Show mobile nav on the same pages as the header
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -44,7 +45,8 @@ export default function RootLayout({
           <LanguageProvider>
             <div className="flex flex-col min-h-screen">
               {showHeader && <Header />}
-              <main className="flex-grow">{children}</main>
+              <main className="flex-grow pb-16 md:pb-0">{children}</main>
+              {showMobileNav && <MobileNav />}
             </div>
             <InstallPWA />
           </LanguageProvider>

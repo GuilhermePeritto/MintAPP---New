@@ -18,9 +18,8 @@ import { Progress } from "@/components/ui/progress"
 import { Separator } from "@/components/ui/separator"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
-import { Calendar, Camera, CreditCard, Edit, Eye, EyeOff, HelpCircle, LogOut, Settings, Shield, Star, Trophy, Zap } from 'lucide-react'
+import { Bell, Calendar, Camera, CreditCard, Edit, Eye, EyeOff, HelpCircle, LogOut, Settings, Shield, Star, Trophy, Zap } from 'lucide-react'
 import Image from 'next/image'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import { calculateLevel, calculateXpToNextLevel, getAchievements } from '../../lib/user-progression'
@@ -76,8 +75,9 @@ export default function Profile() {
   const achievements = useMemo(() => getAchievements(t), [t])
 
   const menuItems = [
-    { icon: <CreditCard className="h-5 w-5" />, label: t('payment_methods'), href: '/payment-methods' },
-    { icon: <Settings className="h-5 w-5" />, label: t('settings'), href: '/settings' },
+    { icon: <Bell className="h-5 w-5" />, label: t('notifications'), badge: "3" },
+    { icon: <CreditCard className="h-5 w-5" />, label: t('payment_methods') },
+    { icon: <Settings className="h-5 w-5" />, label: t('settings') },
     { icon: <HelpCircle className="h-5 w-5" />, label: t('help_support'), href: '/help' },
   ]
 
@@ -174,9 +174,9 @@ export default function Profile() {
               </DialogHeader>
               <Tabs defaultValue="personal" className="w-full">
                 <TabsList className="grid w-full grid-cols-3">
-                  <TabsTrigger value="personal">{t('Personal')}</TabsTrigger>
-                  <TabsTrigger value="contact">{t('Contact')}</TabsTrigger>
-                  <TabsTrigger value="security">{t('Security')}</TabsTrigger>
+                  <TabsTrigger value="personal">{t('personal_info')}</TabsTrigger>
+                  <TabsTrigger value="contact">{t('contact_info')}</TabsTrigger>
+                  <TabsTrigger value="security">{t('security')}</TabsTrigger>
                 </TabsList>
                 <TabsContent value="personal">
                   <form onSubmit={handleProfileUpdate} className="space-y-4">
@@ -417,20 +417,18 @@ export default function Profile() {
         {/* Menu Items */}
         <div className="space-y-2">
           {menuItems.map((item, index) => (
-            <Link
+            <Button
               key={index}
-              href={item.href || '#'}
+              variant="ghost"
+              className="w-full justify-start text-left h-10 sm:h-12 px-3 sm:px-4 hover:bg-primary/20 text-sm sm:text-base"
+              onClick={() => item.href ? router.push(item.href) : null}
             >
-              <Button
-                key={index}
-                variant="ghost"
-                className="w-full justify-start text-left h-10 sm:h-12 px-3 sm:px-4 hover:bg-primary/20 text-sm sm:text-base"
-                onClick={() => item.href ? router.push(item.href) : null}
-              >
-                {item.icon}
-                <span className="ml-3">{item.label}</span>
-              </Button>
-            </Link>
+              {item.icon}
+              <span className="ml-3">{item.label}</span>
+              {item.badge && (
+                <Badge className="ml-auto bg-primary text-primary-foreground text-xs">{item.badge}</Badge>
+              )}
+            </Button>
           ))}
         </div>
 

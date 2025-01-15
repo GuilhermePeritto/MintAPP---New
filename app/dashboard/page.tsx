@@ -16,10 +16,10 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 import { useLanguage } from '@/components/language-provider'
-import { BookingModal } from '@/components/booking-modal'
 import { OnboardingModal } from '@/components/onboarding-modal'
 import { Progress } from "@/components/ui/progress"
 import { Card } from "@/components/ui/card";
+import Link from 'next/link'
 
 interface Facility {
   id: number
@@ -116,22 +116,12 @@ export default function Dashboard() {
               {MOCK_FACILITIES
                 .filter(fac => fac.category === category)
                 .map((facility) => (
-                  <BookingModal 
-                    key={`facility-${facility.id}`}
-                    facilityName={facility.name}
-                    facilityImage={facility.image}
-                    category={facility.category}
-                    rating={facility.rating}
-                    onBooking={(date, startTime, endTime, field) => {
-                      console.log('Booking:', facility.name, date, startTime, endTime, field)
-                      // Here you would typically send the booking information to your backend
-                    }}
-                  >
+                  <Link href={`/book/${facility.id}`} key={`facility-${facility.id}`}>
                     <GlowingCard className="bg-card/50 border-primary/20 overflow-hidden hover:border-primary transition-colors cursor-pointer">
                       <CardContent className="p-0">
                         <div className="relative h-48">
                           <Image
-                            src={facility.image}
+                            src={facility.image || "/placeholder.svg"}
                             alt={facility.name}
                             fill
                             className="object-cover"
@@ -146,7 +136,7 @@ export default function Dashboard() {
                         </div>
                       </CardContent>
                     </GlowingCard>
-                  </BookingModal>
+                  </Link>
                 ))}
             </div>
           </div>

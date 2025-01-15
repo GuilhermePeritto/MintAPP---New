@@ -1,7 +1,9 @@
 'use client'
 
-import { Badge } from "@/components/ui/badge"
+import { useState } from 'react'
+import { Bell } from 'lucide-react'
 import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,9 +13,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
-import { Bell } from 'lucide-react'
-import { useState } from 'react'
 
 interface Notification {
   id: number
@@ -56,7 +55,7 @@ export function NotificationsDropdown() {
         >
           <Bell className="h-5 w-5 text-primary" />
           {notifications.length > 0 && (
-            <Badge
+            <Badge 
               className="absolute -top-1 -right-1 flex items-center justify-center h-5 w-5 rounded-full bg-primary p-0 text-[10px] text-primary-foreground"
             >
               {notifications.length}
@@ -67,18 +66,15 @@ export function NotificationsDropdown() {
       <DropdownMenuContent className="w-80">
         <DropdownMenuLabel>Notifications</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <ScrollArea>
-          <DropdownMenuGroup className="max-h-[300px]">
-            <ScrollBar />
-            {notifications.map((notification) => (
-              <DropdownMenuItem key={notification.id} className="flex flex-col items-start p-2">
-                <div className="font-semibold">{notification.title}</div>
-                <div className="text-sm text-muted-foreground">{notification.message}</div>
-                <div className="text-xs text-muted-foreground mt-1">{notification.date}</div>
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuGroup>
-        </ScrollArea>
+        <DropdownMenuGroup className="max-h-[300px] overflow-y-auto">
+          {notifications.map((notification) => (
+            <DropdownMenuItem key={notification.id} className="flex flex-col items-start p-2">
+              <div className="font-semibold">{notification.title}</div>
+              <div className="text-sm text-muted-foreground">{notification.message}</div>
+              <div className="text-xs text-muted-foreground mt-1">{notification.date}</div>
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
   )

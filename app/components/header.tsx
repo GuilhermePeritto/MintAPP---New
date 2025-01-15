@@ -12,11 +12,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Activity, CreditCard, Gamepad, HelpCircle, History, LogOut, Settings, Trophy, User } from 'lucide-react'
+import { ClipboardList, CreditCard, Gamepad, HelpCircle, History, LogOut, Settings, Trophy, User } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { BookingHistoryButton } from './booking-history-button'
 import { NotificationsDropdown } from './notifications-dropdown'
 
 export function Header() {
@@ -37,7 +36,6 @@ export function Header() {
         </Link>
         <div className="flex items-center space-x-4">
           <NotificationsDropdown />
-          <BookingHistoryButton />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button 
@@ -82,24 +80,10 @@ export function Header() {
                 </DropdownMenuItem>
                 <DropdownMenuItem 
                   className="cursor-pointer"
-                  onClick={() => router.push('/friends')}
-                >
-                  <Activity className="mr-2 h-4 w-4" />
-                  <span>{t('friends')}</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem 
-                  className="cursor-pointer"
-                  onClick={() => router.push('/game-details')}
-                >
-                  <Gamepad className="mr-2 h-4 w-4" />
-                  <span>{t('match_registration')}</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem 
-                  className="cursor-pointer"
-                  onClick={() => router.push('/booking-history')}
+                  onClick={() => router.push('/my-reservations')}
                 >
                   <History className="mr-2 h-4 w-4" />
-                  <span>{t('booking_history')}</span>
+                  <span>{t('my_reservations')}</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem 
                   className="cursor-pointer"
@@ -107,6 +91,13 @@ export function Header() {
                 >
                   <CreditCard className="mr-2 h-4 w-4" />
                   <span>{t('payment_methods')}</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  className="cursor-pointer"
+                  onClick={() => router.push('/register-game')}
+                >
+                  <ClipboardList className="mr-2 h-4 w-4" />
+                  <span>{t('register_game')}</span>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />

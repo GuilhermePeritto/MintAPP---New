@@ -80,3 +80,15 @@
   opacity: 1;
 }
 
+@media (max-width: 640px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+.dialog-content {
+  max-height: 90vh;
+  overflow-y: auto;
+}
+

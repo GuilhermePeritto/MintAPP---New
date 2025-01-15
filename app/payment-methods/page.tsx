@@ -1,13 +1,13 @@
 'use client'
 
-import { useLanguage } from '@/components/language-provider'
-import { Button } from "@/components/ui/button"
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { useLanguage } from '@/components/language-provider'
 import { CreditCard, Trash2 } from 'lucide-react'
-import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
 
 interface PaymentMethod {
   id: number
@@ -77,7 +77,7 @@ export default function PaymentMethods() {
                   value={newCardNumber}
                   onChange={(e) => setNewCardNumber(e.target.value)}
                   placeholder="1234 5678 9012 3456"
-                  className="bg-transparent border-none text-white text-xl mb-2 placeholder:text-gray-300"
+                  className="bg-transparent border-none text-white text-xl mb-2 placeholder-white/70"
                   maxLength={19}
                   required
                 />
@@ -86,7 +86,7 @@ export default function PaymentMethods() {
                     value={newCardExpiry}
                     onChange={(e) => setNewCardExpiry(e.target.value)}
                     placeholder="MM/YY"
-                    className="bg-transparent border-none text-white w-20 placeholder:text-gray-300"
+                    className="bg-transparent border-none text-white w-20 placeholder-white/70"
                     maxLength={5}
                     required
                   />
@@ -94,7 +94,7 @@ export default function PaymentMethods() {
                     value={newCardCVV}
                     onChange={(e) => setNewCardCVV(e.target.value)}
                     placeholder="CVV"
-                    className="bg-transparent border-none text-white w-16 placeholder:text-gray-300"
+                    className="bg-transparent border-none text-white w-16 placeholder-white/70"
                     maxLength={3}
                     required
                   />
