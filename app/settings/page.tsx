@@ -1,15 +1,15 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useLanguage } from '@/components/language-provider'
+import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { useLanguage } from '@/components/language-provider'
-import { Instagram, Facebook, Twitter } from 'lucide-react'
 import { useThemeToggle } from '@/hooks/useThemeToggle'
+import { ChevronLeft, Facebook, Instagram, Twitter } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 export default function Settings() {
   const router = useRouter()
@@ -17,6 +17,7 @@ export default function Settings() {
   const { t } = useLanguage()
   const { theme, toggleTheme } = useThemeToggle()
   const [selectedLanguage, setSelectedLanguage] = useState(language)
+  const [isMobile, setIsMobile] = useState(false)
 
   const [socialLinks, setSocialLinks] = useState({
     instagram: '',
@@ -29,6 +30,15 @@ export default function Settings() {
     if (!savedUser) {
       router.push('/')
     }
+
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 640)
+    }
+
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+
+    return () => window.removeEventListener('resize', checkMobile)
   }, [router])
 
   const handleLanguageChange = (value: string) => {
@@ -50,8 +60,19 @@ export default function Settings() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground p-4 pb-20">
-      <h1 className="text-2xl font-bold mb-6 text-primary">{t('settings')}</h1>
+    <div className="min-h-screen bg-background text-foreground p-4 pb-5">
+      <div className="flex items-center mb-6">
+        {isMobile && (
+          <Button
+            variant="ghost"
+            className="mr-2 p-0"
+            onClick={() => router.back()}
+          >
+            <ChevronLeft className="h-6 w-6" />
+          </Button>
+        )}
+        <h1 className="text-2xl font-bold text-primary">{t('settings')}</h1>
+      </div>
       <Card className="mb-6">
         <CardHeader>
           <CardTitle>{t('language')}</CardTitle>

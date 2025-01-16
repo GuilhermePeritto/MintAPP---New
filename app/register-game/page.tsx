@@ -24,10 +24,10 @@ interface GameResult {
 }
 
 const MOCK_GAME_RESULTS: GameResult[] = [
-  { 
-    id: '1', 
-    date: '2023-07-15', 
-    facility: 'Central Arena', 
+  {
+    id: '1',
+    date: '2023-07-15',
+    facility: 'Central Arena',
     score: '3 - 2',
     notes: 'Great game!',
     players: [
@@ -35,10 +35,10 @@ const MOCK_GAME_RESULTS: GameResult[] = [
       { id: '2', name: 'Jane Smith', number: '7', position: 'Midfielder', goals: 1, assists: 2 }
     ]
   },
-  { 
-    id: '2', 
-    date: '2023-07-10', 
-    facility: 'Downtown Field', 
+  {
+    id: '2',
+    date: '2023-07-10',
+    facility: 'Downtown Field',
     score: '1 - 1',
     notes: 'Tough match',
     players: [
@@ -52,36 +52,48 @@ export default function GameResults() {
   const router = useRouter()
   const { t } = useLanguage()
   const [gameResults, setGameResults] = useState<GameResult[]>(MOCK_GAME_RESULTS)
+  const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
     const savedUser = localStorage.getItem('user')
     if (!savedUser) {
       router.push('/')
     }
+
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 640)
+    }
+
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+
+    return () => window.removeEventListener('resize', checkMobile)
   }, [router])
 
   return (
-    <div className="mx-auto px-5 sm:px-4 md:px-6 space-y-6">
-       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-        <div className="flex items-center mb-4 sm:mb-0">
+    <div className="mx-auto px-5 sm:px-4 md:px-6 space-y-6 pt-4">
+      <div className="flex items-center mb-6">
+        {isMobile && (
           <Button
             variant="ghost"
-            className="mr-2 px-0"
+            className="mr-2 p-0"
             onClick={() => router.back()}
           >
             <ChevronLeft className="h-6 w-6" />
           </Button>
-          <h1 className="text-2xl font-bold">{t('game_results')}</h1>
-        </div>
-        <Button onClick={() => router.push('/register-game/new')} className="w-full sm:w-auto">
-          <Plus className="mr-2 h-4 w-4" /> {t('add_game_results')}
-        </Button>
+        )}
+        <h1 className="text-2xl font-bold text-primary">{t('game_results')}</h1>
       </div>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+          <Button onClick={() => router.push('/register-game/new')} className="w-full sm:w-auto">
+            <Plus className="mr-2 h-4 w-4" /> {t('add_game_results')}
+          </Button>
+        </div>
 
       <div className="space-y-4">
         {gameResults.map((result) => (
-          <Card 
-            key={result.id} 
+          <Card
+            key={result.id}
             className="hover:bg-accent transition-colors cursor-pointer"
             onClick={() => router.push(`/register-game/${result.id}`)}
           >

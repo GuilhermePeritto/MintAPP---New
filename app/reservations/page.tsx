@@ -1,10 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Calendar, Clock, MapPin, Gamepad } from 'lucide-react'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Calendar, Clock, Gamepad, MapPin } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 interface Reservation {
   id: number
@@ -63,7 +63,7 @@ export default function Reservations() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white p-2 sm:p-4 pb-20">
+    <div className="min-h-screen bg-[#0a0a0a] text-white p-2 sm:p-4 pb-5">
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-primary">Your Quests</h1>
         <p className="text-muted-foreground">Manage your upcoming gaming sessions</p>

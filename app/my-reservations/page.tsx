@@ -1,12 +1,12 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { Card, CardContent } from "@/components/ui/card"
 import { useLanguage } from '@/components/language-provider'
 import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
-import { Calendar, Clock, Trophy, Star, ChevronLeft } from 'lucide-react'
+import { Calendar, ChevronLeft, Clock, Star, Trophy } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 interface Achievement {
   name: string
@@ -96,7 +96,7 @@ export default function MyReservations() {
   const progress = (totalXP / nextLevelXP) * 100
 
   return (
-    <div className="min-h-screen bg-background text-foreground p-4 pb-20">
+    <div className="min-h-screen bg-background text-foreground p-4 pb-5">
       <div className="flex items-center mb-6">
         {isMobile && (
           <Button

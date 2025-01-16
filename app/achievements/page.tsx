@@ -1,23 +1,34 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useLanguage } from '@/components/language-provider'
+import { Button } from '@/components/ui/button'
 import { Card, CardContent } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
-import { Trophy, Target, Gamepad, Sword, Zap, Star } from 'lucide-react'
-import { getAchievements, Achievement } from '@/lib/user-progression'
-import { useLanguage } from '@/components/language-provider'
+import { Achievement, getAchievements } from '@/lib/user-progression'
+import { ChevronLeft, Zap } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 export default function Achievements() {
   const router = useRouter()
   const [achievementsState, setAchievements] = useState<Achievement[]>([])
   const { t } = useLanguage()
+  const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
     const savedUser = localStorage.getItem('user')
     if (!savedUser) {
       router.push('/')
     }
+
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 640)
+    }
+
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+
+    return () => window.removeEventListener('resize', checkMobile)
   }, [router])
 
   useEffect(() => {
@@ -25,8 +36,19 @@ export default function Achievements() {
   }, [t])
 
   return (
-    <div className="min-h-screen bg-background text-foreground p-4 pb-20">
-      <h1 className="text-2xl font-bold mb-6 text-primary">{t('achievements')}</h1>
+    <div className="min-h-screen bg-background text-foreground p-4 pb-5">
+      <div className="flex items-center mb-6">
+        {isMobile && (
+          <Button
+            variant="ghost"
+            className="mr-2 p-0"
+            onClick={() => router.back()}
+          >
+            <ChevronLeft className="h-6 w-6" />
+          </Button>
+        )}
+        <h1 className="text-2xl font-bold text-primary">{t('achievements')}</h1>
+      </div>
       <div className="grid gap-4">
         {achievementsState.map((achievement) => (
           <Card key={achievement.id} className={`bg-card border-primary/20 ${achievement.unlocked ? 'border-primary' : ''}`}>

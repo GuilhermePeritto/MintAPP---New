@@ -53,7 +53,7 @@ export default function Friends() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground p-4 pb-20">
+    <div className="min-h-screen bg-background text-foreground p-4 pb-5">
        <div className="flex items-center mb-6">
         {isMobile && (
           <Button

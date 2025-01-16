@@ -107,7 +107,7 @@ export default function ReservationDetails({ params: paramsPromise }: { params: 
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground p-4 pb-20">
+    <div className="min-h-screen bg-background text-foreground p-4 pb-5">
       <div className="max-w-3xl mx-auto">
         <div className="flex items-center mb-6">
           <Button

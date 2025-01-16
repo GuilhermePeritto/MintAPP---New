@@ -1,11 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { useLanguage } from '@/components/language-provider'
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 interface Transaction {
   id: number
@@ -39,7 +38,7 @@ export default function Wallet() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white p-4 pb-20">
+    <div className="min-h-screen bg-[#0a0a0a] text-white p-4 pb-5">
       <h1 className="text-2xl font-bold mb-6 text-primary">{t('wallet')}</h1>
       
       <Card className="bg-gray-900/50 border-primary/20 mb-6">

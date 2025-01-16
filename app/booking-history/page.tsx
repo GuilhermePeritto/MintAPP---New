@@ -1,18 +1,18 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { Card, CardContent } from "@/components/ui/card"
 import { useLanguage } from '@/components/language-provider'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Calendar, Clock, MapPin, Trophy, Star, Users, Zap } from 'lucide-react'
-import { Progress } from "@/components/ui/progress"
-import { Textarea } from "@/components/ui/textarea"
-import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
-import { toast } from "@/components/ui/use-toast"
+import { Progress } from "@/components/ui/progress"
 import { Separator } from "@/components/ui/separator"
+import { Textarea } from "@/components/ui/textarea"
+import { toast } from "@/components/ui/use-toast"
+import { cn } from "@/lib/utils"
+import { Calendar, Clock, MapPin, Star, Trophy, Zap } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 interface Achievement {
   name: string
@@ -252,7 +252,7 @@ export default function BookingHistory() {
   const progress = (totalXP / nextLevelXP) * 100
 
   return (
-    <div className="min-h-screen bg-background text-foreground p-3 sm:p-4 md:p-6 pb-20">
+    <div className="min-h-screen bg-background text-foreground p-3 sm:p-4 md:p-6 pb-5">
       <h1 className="text-2xl font-bold mb-6 text-primary">{t('booking_history')}</h1>
 
       <Card className="mb-6 bg-gradient-to-r from-primary/10 to-primary/20">

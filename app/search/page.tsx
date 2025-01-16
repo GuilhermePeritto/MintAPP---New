@@ -67,7 +67,7 @@ export default function SearchPage() {
   )
 
   return (
-    <div className="mx-auto px-5 pt-4 sm:px-4 md:px-6 space-y-6">
+    <div className="mx-auto px-5 pt-4 pb-5 sm:px-4 md:px-6 space-y-6">
       <div className="flex items-center mb-6">
         {isMobile && (
           <Button

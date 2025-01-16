@@ -140,7 +140,7 @@ export default function Profile() {
   const xpToNextLevel = calculateXpToNextLevel(stats.xp)
 
   return (
-    <div className="min-h-screen bg-background text-foreground pb-20 px-2 sm:px-4">
+    <div className="min-h-screen bg-background text-foreground pb-5 px-2 sm:px-4">
       {/* Header */}
       <div className="relative h-48 bg-gradient-to-r from-primary/20 to-primary/10">
         <div className="absolute bottom-0 left-0 right-0 p-4 flex flex-col sm:flex-row sm:items-end">

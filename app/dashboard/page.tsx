@@ -58,7 +58,7 @@ export default function Dashboard() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-background text-foreground pb-20 px-5 sm:px-4 md:px-6">
+    <div className="min-h-screen bg-background text-foreground pb-5 px-5 sm:px-4 md:px-6 pt-4">
       {/* Player Stats */}
       <GlowingCard className="bg-primary/5 p-4 mb-6" glowColor="rgba(0, 128, 255, 0.2)">
         <h2 className="text-xl font-bold mb-2 text-primary">{t('athlete_stats')}</h2>
