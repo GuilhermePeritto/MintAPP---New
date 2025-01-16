@@ -344,7 +344,8 @@ const translations = {
     'yellow': 'Yellow',
     'red': 'Red',
     'avg_minutes': 'Avg. Minutes',
-    'enter_game_notes': 'Enter any notes about the game here'
+    'enter_game_notes': 'Enter any notes about the game here',
+    'reservations': 'Reservations',
   },
   pt: {
     'app_name': 'Central do Jogador',
@@ -487,7 +488,6 @@ const translations = {
     'match_registration': 'Partidas',
     'match_list': 'Lista de Partidas',
     'add_match': 'Adicionar Partida',
-    'number': 'Número',
     'edit_match': 'Editar Partida',
     'update_match': 'Atualizar Partida',
     'notes': 'Notas',
@@ -669,7 +669,8 @@ const translations = {
     'yellow': 'Amarelo',
     'red': 'Vermelho',
     'avg_minutes': 'Média de Minutos',
-    'enter_game_notes': 'Digite quaisquer notas sobre o jogo aqui'
+    'enter_game_notes': 'Digite quaisquer notas sobre o jogo aqui',
+    'reservations': 'Reservas',
   }
 }
 

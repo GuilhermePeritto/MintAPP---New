@@ -1,15 +1,14 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
-import { Home, Search, History, Users } from 'lucide-react'
 import { useLanguage } from '@/components/language-provider'
-import { cn } from "@/lib/utils"
+import { ClipboardList, History, Home, Search } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
 const navItems = [
   { icon: Home, label: 'home', href: '/dashboard' },
   { icon: Search, label: 'search', href: '/search' },
-  { icon: History, label: 'my_reservations', href: '/my-reservations' },
-  { icon: Users, label: 'friends', href: '/friends' },
+  { icon: History, label: 'reservations', href: '/my-reservations' },
+  { icon: ClipboardList, label: 'match_registration', href: '/register-game' },
 ]
 
 export function MobileNav() {

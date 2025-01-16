@@ -31,14 +31,14 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icon-192x192.png" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="apple-mobile-web-app-title" content="Gamer Hub" />
-        <meta name="application-name" content="Gamer Hub" />
+        <meta name="apple-mobile-web-app-title" content="MintApp" />
+        <link rel="icon" type="image/svg+xml" href="/icon-192x192.png" />
+        <meta name="application-name" content="MintApp" />
         <meta name="msapplication-TileColor" content="#000000" />
         <meta name="theme-color" content="#000000" />
         <meta name="description" content="Your ultimate gaming destination" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
         <link rel="manifest" href="/manifest.json" />
-        <link rel="icon" href="/favicon.ico" />
       </head>
       <body className={`bg-background text-foreground`}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>

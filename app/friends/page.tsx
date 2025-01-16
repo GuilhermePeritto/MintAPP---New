@@ -1,12 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useLanguage } from '@/components/language-provider'
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { ChevronLeft } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 interface Friend {
   id: number
@@ -25,12 +26,22 @@ export default function Friends() {
   const [inviteEmail, setInviteEmail] = useState('')
   const router = useRouter()
   const { t } = useLanguage()
+  const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
     const savedUser = localStorage.getItem('user')
     if (!savedUser) {
       router.push('/')
     }
+
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 640)
+    }
+
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+
+    return () => window.removeEventListener('resize', checkMobile)
   }, [router])
 
   const handleInvite = (e: React.FormEvent) => {
@@ -43,7 +54,18 @@ export default function Friends() {
 
   return (
     <div className="min-h-screen bg-background text-foreground p-4 pb-20">
-      <h1 className="text-2xl font-bold mb-6 text-primary">{t('friends')}</h1>
+       <div className="flex items-center mb-6">
+        {isMobile && (
+          <Button
+            variant="ghost"
+            className="mr-2 p-0"
+            onClick={() => router.back()}
+          >
+            <ChevronLeft className="h-6 w-6" />
+          </Button>
+        )}
+        <h1 className="text-2xl font-bold text-primary">{t('friends')}</h1>
+      </div>
 
       <Card className="mb-6">
         <CardHeader>

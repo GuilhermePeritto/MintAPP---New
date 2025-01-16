@@ -1,12 +1,13 @@
 'use client'
 
 import { useLanguage } from '@/components/language-provider'
+import { Button } from '@/components/ui/button'
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Search } from 'lucide-react'
+import { ChevronLeft, Search } from 'lucide-react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const categories = [
   "Soccer Fields",
@@ -39,6 +40,23 @@ export default function SearchPage() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const router = useRouter()
   const { t } = useLanguage()
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+      const savedUser = localStorage.getItem('user')
+      if (!savedUser) {
+        router.push('/')
+      }
+  
+      const checkMobile = () => {
+        setIsMobile(window.innerWidth <= 640)
+      }
+  
+      checkMobile()
+      window.addEventListener('resize', checkMobile)
+  
+      return () => window.removeEventListener('resize', checkMobile)
+    }, [router])
 
   const filteredCategories = categories.filter(category =>
     category.toLowerCase().includes(searchTerm.toLowerCase())
@@ -49,8 +67,19 @@ export default function SearchPage() {
   )
 
   return (
-    <div className="mx-auto px-5 sm:px-4 md:px-6 space-y-6">
-      <h1 className="text-2xl font-bold mb-4">{t('search_facilities')}</h1>
+    <div className="mx-auto px-5 pt-4 sm:px-4 md:px-6 space-y-6">
+      <div className="flex items-center mb-6">
+        {isMobile && (
+          <Button
+            variant="ghost"
+            className="mr-2 p-0"
+            onClick={() => router.back()}
+          >
+            <ChevronLeft className="h-6 w-6" />
+          </Button>
+        )}
+        <h1 className="text-2xl font-bold text-primary">{t('search_facilities')}</h1>
+      </div>
       
       <div className="relative">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />

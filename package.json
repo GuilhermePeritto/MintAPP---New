@@ -1,12 +1,13 @@
 {
-  "name": "my-v0-project",
+  "name": "mintapp",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "app": "bubblewrap init --manifest=http://mintappnew.vercel.app/manifest.json --directory=dist --verbose && cd dist && bubblewrap build --verbose"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
