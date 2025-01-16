@@ -41,7 +41,7 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.json" />
       </head>
       <body className={`bg-background text-foreground`}>
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={true}>
           <LanguageProvider>
             <div className="flex flex-col min-h-screen">
               {showHeader && <Header />}
