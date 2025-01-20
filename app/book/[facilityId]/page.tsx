@@ -1,10 +1,8 @@
 'use client'
 
 import { useLanguage } from '@/components/language-provider'
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import {
   Carousel,
   CarouselContent,
@@ -12,40 +10,29 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Textarea } from "@/components/ui/textarea"
-import { cn } from "@/lib/utils"
-import { format } from 'date-fns'
-import { CalendarIcon, Check, ChevronLeft, Clock, DollarSign, MapPin, Star, Users } from 'lucide-react'
+import { Check, ChevronLeft, Clock, DollarSign, MapPin, Star, Users } from 'lucide-react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
 
 // Mock facility data - in a real app, this would come from your API
 const MOCK_FACILITY = {
   id: '1',
-  name: "Central Soccer Field",
+  name: "Central Soccer Complex",
   category: "Soccer Fields",
   rating: 4.8,
-  description: "A modern soccer field with professional-grade turf and excellent facilities. Perfect for both casual games and competitive matches.",
-  images: [
-    "/placeholder.svg",
-    "/placeholder.svg?1",
-    "/placeholder.svg?2",
-    "/placeholder.svg?3",
-  ],
+  totalReviews: 324,
+  ranking: "Top 5%",
+  description: "A modern soccer complex with multiple professional-grade fields and excellent facilities. Perfect for both casual games and competitive matches.",
+  logo: "/placeholder.svg",
+  coverImage: "/placeholder.svg",
   address: "123 Sports Avenue, Cityville",
+  location: { lat: 40.7128, lng: -74.0060 },
   openingHours: "Monday to Sunday: 6:00 AM - 10:00 PM",
   pricePerHour: 50,
-  capacity: "22 players (11 vs 11)",
+  capacity: "22 players per field (11 vs 11)",
   amenities: [
     { name: "Parking", icon: "Car" },
     { name: "Lockers", icon: "LockKeyhole" },
@@ -53,90 +40,103 @@ const MOCK_FACILITY = {
     { name: "Equipment Rental", icon: "Football" },
     { name: "Floodlights", icon: "Lightbulb" },
     { name: "Spectator Seating", icon: "Users" },
+  ],
+  fields: [
+    { id: '1', name: "Field A", type: "11-a-side", surface: "Natural Grass", image: "/placeholder.svg", category: "Full-size Fields" },
+    { id: '2', name: "Field B", type: "11-a-side", surface: "Artificial Turf", image: "/placeholder.svg", category: "Full-size Fields" },
+    { id: '3', name: "Field C", type: "7-a-side", surface: "Artificial Turf", image: "/placeholder.svg", category: "Small-sided Fields" },
+    { id: '4', name: "Field D", type: "5-a-side", surface: "Artificial Turf", image: "/placeholder.svg", category: "Small-sided Fields" },
+    { id: '5', name: "Indoor Court", type: "Futsal", surface: "Hardwood", image: "/placeholder.svg", category: "Indoor Fields" },
+  ],
+  recentReviews: [
+    {
+      id: 1,
+      user: "Alice Johnson",
+      avatar: "https://source.unsplash.com/random/100x100?portrait,woman",
+      rating: 5,
+      comment: "Excellent facilities and well-maintained fields. Highly recommended!",
+      date: "2024-01-15"
+    },
+    {
+      id: 2,
+      user: "Bob Smith",
+      avatar: "https://source.unsplash.com/random/100x100?portrait,man",
+      rating: 4,
+      comment: "Great place to play, but could use more parking spaces.",
+      date: "2024-01-14"
+    }
   ]
 }
 
-// Mock facility images - in a real app, these would come from your backend
-const FACILITY_IMAGES = [
-  "/placeholder.svg",
-  "/placeholder.svg?1",
-  "/placeholder.svg?2",
-  "/placeholder.svg?3",
-]
-
 export default function BookingPage({ params }: { params: { facilityId: string } }) {
-  const [date, setDate] = useState<Date | undefined>(new Date())
-  const [startTime, setStartTime] = useState('')
-  const [endTime, setEndTime] = useState('')
-  const [field, setField] = useState('')
   const { t } = useLanguage()
   const router = useRouter()
+  const [userLocation, setUserLocation] = useState<[number, number] | null>(null)
+  const position = userLocation || [MOCK_FACILITY.location.lat, MOCK_FACILITY.location.lng]
+
+  useEffect(() => {
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        setUserLocation([position.coords.latitude, position.coords.longitude])
+      })
+    }
+  }, [])
 
   // In a real app, you would fetch the facility data based on the facilityId
   const facility = MOCK_FACILITY
 
-  const handleBooking = () => {
-    if (date && startTime && endTime && field) {
-      // Here you would typically send the booking data to your backend
-      console.log('Booking:', { facilityId: params.facilityId, date, startTime, endTime, field })
-      // After successful booking, redirect to a confirmation page or dashboard
-      router.push('/dashboard')
+  const groupedFields = facility.fields.reduce((acc, field) => {
+    if (!acc[field.category]) {
+      acc[field.category] = [];
     }
-  }
+    acc[field.category].push(field);
+    return acc;
+  }, {} as Record<string, typeof facility.fields>);
 
   return (
-    <div className="mx-auto px-5 sm:px-4 md:px-6 py-6">
-      <div className="flex items-center mb-6 space-x-4">
+    <div className="container mx-auto px-4 py-6">
+      <div className="relative h-64 mb-6">
+        <Image
+          src={facility.coverImage || "/placeholder.svg"}
+          alt={facility.name}
+          fill
+          className="object-cover rounded-lg"
+        />
+        <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <Image
+            src={facility.logo || "/placeholder.svg"}
+            alt={facility.name}
+            width={100}
+            height={100}
+            className="rounded-full"
+          />
+        </div>
         <Button
           variant="ghost"
           onClick={() => router.push('/dashboard')}
-          className="p-0 hover:bg-transparent"
+          className="absolute top-4 left-4 p-0 hover:bg-transparent text-white"
         >
-          <ChevronLeft className="h-6 w-6 text-primary" />
+          <ChevronLeft className="h-6 w-6" />
         </Button>
-        <h1 className="text-2xl font-bold text-primary">{facility.name}</h1>
       </div>
 
       <Tabs defaultValue="details" className="w-full">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="details">{t('facility_details')}</TabsTrigger>
-          <TabsTrigger value="booking">{t('booking_details')}</TabsTrigger>
+          <TabsTrigger value="location">{t('location')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="details" className="mt-4 space-y-4">
           <Card>
-            <CardContent className="p-0">
-              <Carousel className="w-full">
-                <CarouselContent>
-                  {FACILITY_IMAGES.map((image, index) => (
-                    <CarouselItem key={index}>
-                      <div className="relative h-64 w-full overflow-hidden rounded-lg">
-                        <Image
-                          src={image || "/placeholder.svg"}
-                          alt={`${facility.name} - ${t('image')} ${index + 1}`}
-                          fill
-                          className="object-cover rounded-lg"
-                        />
-                      </div>
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <CarouselPrevious className="left-2" />
-                <CarouselNext className="right-2" />
-              </Carousel>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-4">
+            <CardContent className="p-6">
               <div className="flex justify-between items-center mb-4">
                 <div>
                   <h2 className="text-2xl font-semibold">{facility.name}</h2>
                   <p className="text-sm text-muted-foreground">{facility.category}</p>
                 </div>
-                <div className="flex items-center">
-                  <Star className="h-5 w-5 text-yellow-500 mr-1" />
-                  <span className="font-semibold">{facility.rating}</span>
+                <div className="flex items-center bg-primary/10 px-3 py-1 rounded-full">
+                  <Star className="h-5 w-5 text-primary mr-1" />
+                  <span className="font-semibold text-primary">{facility.rating}</span>
                 </div>
               </div>
 
@@ -152,19 +152,19 @@ export default function BookingPage({ params }: { params: { facilityId: string }
                   <div className="space-y-2">
                     <div className="flex items-center">
                       <MapPin className="h-5 w-5 mr-2 text-primary" />
-                      <span>{facility.address}</span>
+                      <span className="text-sm">{facility.address}</span>
                     </div>
                     <div className="flex items-center">
                       <Clock className="h-5 w-5 mr-2 text-primary" />
-                      <span>{facility.openingHours}</span>
+                      <span className="text-sm">{facility.openingHours}</span>
                     </div>
                     <div className="flex items-center">
                       <DollarSign className="h-5 w-5 mr-2 text-primary" />
-                      <span>{t('price_per_hour', { price: facility.pricePerHour })}</span>
+                      <span className="text-sm">{t('price_per_hour', { price: facility.pricePerHour })}</span>
                     </div>
                     <div className="flex items-center">
                       <Users className="h-5 w-5 mr-2 text-primary" />
-                      <span>{facility.capacity}</span>
+                      <span className="text-sm">{facility.capacity}</span>
                     </div>
                   </div>
 
@@ -174,128 +174,97 @@ export default function BookingPage({ params }: { params: { facilityId: string }
                       {facility.amenities.map((amenity, index) => (
                         <div key={index} className="flex items-center">
                           <Check className="h-5 w-5 mr-2 text-green-500" />
-                          <span>{amenity.name}</span>
+                          <span className="text-sm">{amenity.name}</span>
                         </div>
                       ))}
                     </div>
                   </div>
                 </div>
+                <div className="mt-4">
+                  <Button
+                    onClick={() => router.push(`/book/${params.facilityId}/reviews`)}
+                    variant="outline"
+                    className="w-full flex items-center justify-between"
+                  >
+                    <div className="flex items-center">
+                      <Star className="h-5 w-5 text-yellow-500 mr-2" />
+                      <span className="font-semibold text-lg">{facility.rating}</span>
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      {facility.totalReviews} {t('reviews')}
+                    </div>
+                    <div className="text-sm font-medium text-primary">
+                      {facility.ranking}
+                    </div>
+                  </Button>
+                </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>{t('facility_reviews')}</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="h-60 overflow-y-auto space-y-4 pr-2">
-                {[1, 2, 3, 4, 5].map((review) => (
-                  <div key={review} className="border-b pb-4 last:border-b-0">
-                    <div className="flex items-center space-x-2">
-                      <Avatar className="h-8 w-8">
-                        <AvatarImage src={`https://i.pravatar.cc/32?img=${review}`} />
-                        <AvatarFallback>U{review}</AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <p className="font-semibold">User {review}</p>
-                        <div className="flex items-center">
-                          {[...Array(5)].map((_, i) => (
-                            <Star key={i} className={`h-4 w-4 ${i < 4 ? 'text-yellow-500' : 'text-gray-300'}`} />
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                    <p className="mt-2 text-sm">{t('mock_review')}</p>
-                  </div>
-                ))}
-              </div>
-              <div className="space-y-4">
-                <h4 className="font-medium">{t('write_review')}</h4>
-                <div className="flex items-center space-x-1">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <Button key={star} variant="ghost" size="sm" className="p-0 h-8 w-8">
-                      <Star className={`h-6 w-6 ${star <= 3 ? 'text-yellow-500' : 'text-gray-300'}`} />
-                    </Button>
-                  ))}
-                </div>
-                <Textarea placeholder={t('write_your_review')} className="w-full" />
-                <Button className="w-full">{t('submit_review')}</Button>
-              </div>
-            </CardContent>
-          </Card>
+          {Object.entries(groupedFields).map(([category, fields]) => (
+            <Card key={category}>
+              <CardContent className="p-6">
+                <h3 className="text-xl font-semibold mb-4">{category}</h3>
+                <Carousel className="w-full">
+                  <CarouselContent>
+                    {fields.map((field) => (
+                      <CarouselItem key={field.id} className="md:basis-1/2 lg:basis-1/3">
+                        <Card
+                          className="cursor-pointer hover:shadow-lg transition-shadow duration-300 overflow-hidden"
+                          onClick={() => router.push(`/book/${params.facilityId}/fields/${field.id}`)}
+                        >
+                          <CardContent className="p-0">
+                            <div className="relative h-48">
+                              <Image
+                                src={field.image || "/placeholder.svg"}
+                                alt={field.name}
+                                fill
+                                className="object-cover"
+                              />
+                            </div>
+                            <div className="w-full p-4 bg-card justify-between flex items-center">
+                              <div className="flex items-center space-x-2">
+                                <h4 className="text-lg font-semibold text-muted-foreground mb-1">{field.name}</h4>
+                                <p className="text-sm text-muted-foreground">{field.type}</p>
+                              </div>
+                              <span className="text-sm font-medium items-center text-muted-foreground">{field.surface}</span>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <CarouselPrevious />
+                  <CarouselNext />
+                </Carousel>
+              </CardContent>
+            </Card>
+          ))}
         </TabsContent>
 
-        <TabsContent value="booking" className="mt-4 space-y-4">
+        <TabsContent value="location" className="mt-4">
           <Card>
-            <CardContent className="p-4 space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="date">{t('select_date')}</Label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "w-full justify-start text-left font-normal",
-                        !date && "text-muted-foreground"
-                      )}
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {date ? format(date, "PPP") : <span>{t('pick_a_date')}</span>}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={date}
-                      onSelect={setDate}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="startTime">{t('start_time')}</Label>
-                  <Input
-                    id="startTime"
-                    type="time"
-                    value={startTime}
-                    onChange={(e) => setStartTime(e.target.value)}
+            <CardContent className="p-4">
+              <h3 className="text-xl font-semibold mb-4">{t('facility_location')}</h3>
+              <div className="h-[400px] rounded-lg overflow-hidden">
+                <MapContainer center={position} zoom={13} scrollWheelZoom={false}>
+                  <TileLayer
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                   />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="endTime">{t('end_time')}</Label>
-                  <Input
-                    id="endTime"
-                    type="time"
-                    value={endTime}
-                    onChange={(e) => setEndTime(e.target.value)}
-                  />
-                </div>
+                  <Marker position={position}>
+                    <Popup>
+                      A pretty CSS3 popup. <br /> Easily customizable.
+                    </Popup>
+                  </Marker>
+                </MapContainer>
               </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="field">{t('select_field')}</Label>
-                <Select onValueChange={setField}>
-                  <SelectTrigger id="field">
-                    <SelectValue placeholder={t('select_field')} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="field1">{t('field')} 1</SelectItem>
-                    <SelectItem value="field2">{t('field')} 2</SelectItem>
-                    <SelectItem value="field3">{t('field')} 3</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
+              <p className="mt-4 text-muted-foreground">{facility.address}</p>
               <Button
-                onClick={handleBooking}
-                className="w-full"
-                disabled={!date || !startTime || !endTime || !field}
+                className="mt-4"
               >
-                {t('confirm_booking')}
+                {t('get_directions')}
               </Button>
             </CardContent>
           </Card>
