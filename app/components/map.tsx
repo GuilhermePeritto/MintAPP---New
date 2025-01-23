@@ -36,7 +36,7 @@ const Map: React.FC<MapProps> = ({
     const { theme } = useThemeToggle();
 
     return (
-        <div className={cn("relative h-[500px] w-full rounded-md overflow-hidden", className)}>
+        <div className={cn("relative h-[500px] z-[1] w-full rounded-md overflow-hidden", className)}>
             <MapContainer
                 center={center}
                 zoom={zoom}
