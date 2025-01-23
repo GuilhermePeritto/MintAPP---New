@@ -12,10 +12,10 @@ import {
 } from "@/components/ui/carousel"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Check, ChevronLeft, Clock, DollarSign, MapPin, Star, Users } from 'lucide-react'
+import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
 
 // Mock facility data - in a real app, this would come from your API
 const MOCK_FACILITY = {
@@ -73,6 +73,8 @@ export default function BookingPage({ params }: { params: { facilityId: string }
   const router = useRouter()
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null)
   const position = userLocation || [MOCK_FACILITY.location.lat, MOCK_FACILITY.location.lng]
+
+  const Map = dynamic(() => import("@/app/components/map"), { ssr: false });
 
   useEffect(() => {
     if ('geolocation' in navigator) {
@@ -247,18 +249,8 @@ export default function BookingPage({ params }: { params: { facilityId: string }
           <Card>
             <CardContent className="p-4">
               <h3 className="text-xl font-semibold mb-4">{t('facility_location')}</h3>
-              <div className="h-[400px] rounded-lg overflow-hidden">
-                <MapContainer center={position} zoom={13} scrollWheelZoom={false}>
-                  <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  />
-                  <Marker position={position}>
-                    <Popup>
-                      A pretty CSS3 popup. <br /> Easily customizable.
-                    </Popup>
-                  </Marker>
-                </MapContainer>
+              <div className="h-[400px] rounded-lg">
+                <Map center={position} markerPosition={position}/>
               </div>
               <p className="mt-4 text-muted-foreground">{facility.address}</p>
               <Button

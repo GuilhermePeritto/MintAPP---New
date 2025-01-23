@@ -33,6 +33,12 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="MintApp" />
         <link rel="icon" type="image/svg+xml" href="/icon-192x192.png" />
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossOrigin="" />
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+          integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+          crossOrigin=""></script>
         <meta name="application-name" content="MintApp" />
         <meta name="msapplication-TileColor" content="#000000" />
         <meta name="theme-color" content="#000000" />
