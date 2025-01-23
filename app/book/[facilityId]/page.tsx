@@ -73,8 +73,25 @@ export default function BookingPage({ params }: { params: { facilityId: string }
   const router = useRouter()
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null)
   const position = userLocation || [MOCK_FACILITY.location.lat, MOCK_FACILITY.location.lng]
+  const [isMobile, setIsMobile] = useState(false)
 
   const Map = dynamic(() => import("@/app/components/map"), { ssr: false });
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem('user')
+    if (!savedUser) {
+      router.push('/')
+    }
+
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 640)
+    }
+
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [router])
 
   useEffect(() => {
     if ('geolocation' in navigator) {
@@ -96,7 +113,20 @@ export default function BookingPage({ params }: { params: { facilityId: string }
   }, {} as Record<string, typeof facility.fields>);
 
   return (
-    <div className="container mx-auto px-4 py-6">
+    <div className="mx-auto px-4 py-6">
+      <div className="flex items-center mb-6">
+        {isMobile && (
+          <Button
+            variant="ghost"
+            className="mr-2 p-0"
+            onClick={() => router.back()}
+          >
+            <ChevronLeft className="h-6 w-6" />
+          </Button>
+        )}
+        <h1 className="text-2xl font-bold text-primary">{t('booking_details')}</h1>
+      </div>
+
       <div className="relative h-64 mb-6">
         <Image
           src={facility.coverImage || "/placeholder.svg"}
@@ -104,7 +134,7 @@ export default function BookingPage({ params }: { params: { facilityId: string }
           fill
           className="object-cover rounded-lg"
         />
-        <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <div className="absolute inset-0 flex items-center justify-center">
           <Image
             src={facility.logo || "/placeholder.svg"}
             alt={facility.name}
@@ -124,7 +154,7 @@ export default function BookingPage({ params }: { params: { facilityId: string }
 
       <Tabs defaultValue="details" className="w-full">
         <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="details">{t('facility_details')}</TabsTrigger>
+          <TabsTrigger value="details">{t('details')}</TabsTrigger>
           <TabsTrigger value="location">{t('location')}</TabsTrigger>
         </TabsList>
 
@@ -249,8 +279,8 @@ export default function BookingPage({ params }: { params: { facilityId: string }
           <Card>
             <CardContent className="p-4">
               <h3 className="text-xl font-semibold mb-4">{t('facility_location')}</h3>
-              <div className="h-[400px] rounded-lg">
-                <Map center={position} markerPosition={position}/>
+              <div className="h-[400px] rounded-lg overflow-hidden">
+                <Map center={position} markerPosition={position} className='overflow-hidden'/>
               </div>
               <p className="mt-4 text-muted-foreground">{facility.address}</p>
               <Button
