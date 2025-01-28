@@ -12,7 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { ClipboardList, CreditCard, Gamepad, HelpCircle, History, LogOut, Settings, Trophy, User } from 'lucide-react'
+import { ClipboardList, CreditCard, Gamepad, HelpCircle, History, LogOut, MapPin, Settings, Trophy, User } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -98,6 +98,10 @@ export function Header() {
                 >
                   <ClipboardList className="mr-2 h-4 w-4" />
                   <span>{t('register_game')}</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer" onClick={() => router.push("/indicate-establishment")}>
+                  <MapPin className="mr-2 h-4 w-4" />
+                  <span>{t("indicate_establishment")}</span>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
