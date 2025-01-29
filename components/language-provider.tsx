@@ -355,8 +355,11 @@ const translations = {
     'describe_establishment': "Describe the establishment and why you recommend it...",
     'submit_recommendation': "Submit Recommendation",
     'indicate_establishment': "Indicate Establishment",
-    'detalhes_estabelecimento': "Establishment Details",
-    'enviar_indicacao': "Submit Recommendation",
+    'send_indicate': "Submit Recommendation",
+    'nearby_arenas': "Nearby Arenas",
+    'last_reservations': "Last Reservations",
+    'recent_games': "Recent Games",
+    'view_more': "View More",
   },
   pt: {
     'app_name': 'Central do Jogador',
@@ -692,8 +695,10 @@ const translations = {
     'describe_establishment': "Descreva o estabelecimento e por que você o recomenda...",
     'submit_recommendation': "Enviar Recomendação",
     'indicate_establishment': "Indicar Estabelecimento",
-    'detalhes_estabelecimento': "Detalhes do Estabelecimento",
-    'enviar_indicacao': "Enviar Indicação",
+    'send_indicate' : "Enviar Indicação",
+    'last_reservations': "Últimas Reservas",
+    'recent_games': "Jogos Recentes",
+    'view_more': "Ver Mais",
   }
 }
 
