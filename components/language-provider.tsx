@@ -360,6 +360,12 @@ const translations = {
     'last_reservations': "Last Reservations",
     'recent_games': "Recent Games",
     'view_more': "View More",
+    'new_indication': "New Indication",
+    'indications_list': "Indications List",
+    'send_indication': "Send Indication",
+    'indication_success': "Indication submitted successfully!",
+    'no_indications': "No indications yet. Be the first to indicate an establishment!",
+    'view_details': "View Details",
   },
   pt: {
     'app_name': 'Central do Jogador',
@@ -699,6 +705,12 @@ const translations = {
     'last_reservations': "Últimas Reservas",
     'recent_games': "Jogos Recentes",
     'view_more': "Ver Mais",
+    'new_indication': "Nova Indicação",
+    'indications_list': "Lista de indicações",
+    'send_indication': "Enviar Indicação",
+    'indication_success': "Indicação enviada com sucesso!",
+    'no_indications': "Ainda não há indicações. faça sua primeira indicação!",
+    'view_details': "Ver Detalhes",
   }
 }
 

@@ -1,122 +1,255 @@
 "use client"
 
 import { useLanguage } from "@/components/language-provider"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { GlowingCard } from "@/components/ui/glowing-card"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { ChevronLeft, Globe, MapPin, Phone } from "lucide-react"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { ChevronLeft, ChevronRight, Pencil, Plus } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
-export default function RecommendEstablishment() {
-  const router = useRouter()
+interface Establishment {
+  id: number
+  name: string
+  address: string
+  phone: string
+  email: string
+  socialMedia: string
+  website: string
+  openingHours: string
+  responsiblePerson: string
+  status: "Enviado" | "Em negociação" | "Aprovado" | "Rejeitado"
+}
+
+export default function IndicateEstablishment() {
   const { t } = useLanguage()
-  const [formData, setFormData] = useState({
+  const router = useRouter()
+  const [establishments, setEstablishments] = useState<Establishment[]>([])
+  const [showForm, setShowForm] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+  const [formData, setFormData] = useState<Omit<Establishment, "id" | "status">>({
     name: "",
     address: "",
     phone: "",
+    email: "",
+    socialMedia: "",
     website: "",
-    description: "",
+    openingHours: "",
+    responsiblePerson: "",
   })
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // Here you would typically send the data to your backend
-    console.log("Recommendation submitted:", formData)
-    // After submission, redirect to a confirmation page or back to the dashboard
-    router.push("/dashboard")
+    const newEstablishment: Establishment = {
+      ...formData,
+      id: establishments.length + 1,
+      status: "Enviado",
+    }
+    setEstablishments((prev) => [newEstablishment, ...prev])
+    setShowForm(false)
+    setFormData({
+      name: "",
+      address: "",
+      phone: "",
+      email: "",
+      socialMedia: "",
+      website: "",
+      openingHours: "",
+      responsiblePerson: "",
+    })
+    alert(t("indication_success"))
   }
 
+  const getStatusBadge = (status: Establishment["status"]) => {
+    switch (status) {
+      case "Enviado":
+        return <Badge variant="secondary">{status}</Badge>
+      case "Em negociação":
+        return <Badge variant="warning">{status}</Badge>
+      case "Aprovado":
+        return <Badge variant="success">{status}</Badge>
+      case "Rejeitado":
+        return <Badge variant="destructive">{status}</Badge>
+    }
+  }
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem('user')
+    if (!savedUser) {
+      router.push('/')
+    }
+
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 640)
+    }
+
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [router])
+
   return (
-    <div className="container mx-auto px-4 py-6">
+    <div className="mx-auto px-5 sm:px-4 md:px-6 space-y-6 pt-4">
       <div className="flex items-center mb-6">
-        <Button variant="ghost" onClick={() => router.back()} className="mr-2 px-0 hover:bg-transparent">
-          <ChevronLeft className="h-6 w-6" />
+        {isMobile && (
+          <Button
+            variant="ghost"
+            className="mr-2 p-0"
+            onClick={() => router.back()}
+          >
+            <ChevronLeft className="h-6 w-6" />
+          </Button>
+        )}
+        <h1 className="text-2xl font-bold text-primary">{t('indicate_establishment')}</h1>
+      </div>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+        <Button onClick={() => setShowForm(true)} className="w-full sm:w-auto">
+          <Plus className="mr-2 h-4 w-4" />
+          {t("new_indication")}
         </Button>
-        <h1 className="text-2xl font-bold">{t("indicate_establishment")}</h1>
       </div>
 
-      <Card>
+      {showForm && (
+        <GlowingCard>
+          <CardHeader>
+            <CardTitle>{t("new_indication")}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <Input
+                name="name"
+                placeholder={t("establishment_name")}
+                value={formData.name}
+                onChange={handleInputChange}
+                required
+              />
+              <Input
+                name="address"
+                placeholder={t("address")}
+                value={formData.address}
+                onChange={handleInputChange}
+                required
+              />
+              <Input
+                name="phone"
+                placeholder={t("phone")}
+                value={formData.phone}
+                onChange={handleInputChange}
+                required
+              />
+              <Input
+                name="email"
+                placeholder={t("email")}
+                value={formData.email}
+                onChange={handleInputChange}
+                required
+              />
+              <Input
+                name="socialMedia"
+                placeholder={t("social_media")}
+                value={formData.socialMedia}
+                onChange={handleInputChange}
+              />
+              <Input name="website" placeholder={t("website")} value={formData.website} onChange={handleInputChange} />
+              <Input
+                name="openingHours"
+                placeholder={t("opening_hours")}
+                value={formData.openingHours}
+                onChange={handleInputChange}
+                required
+              />
+              <Input
+                name="responsiblePerson"
+                placeholder={t("responsible_person")}
+                value={formData.responsiblePerson}
+                onChange={handleInputChange}
+                required
+              />
+              <div className="flex justify-end space-x-4">
+                <Button type="button" variant="outline" onClick={() => setShowForm(false)}>
+                  {t("cancel")}
+                </Button>
+                <Button type="submit">{t("send_indication")}</Button>
+              </div>
+            </form>
+          </CardContent>
+        </GlowingCard>
+      )}
+
+      <GlowingCard>
         <CardHeader>
-          <CardTitle>{t("detalhes_estabelecimento")}</CardTitle>
+          <CardTitle>{t("indications_list")}</CardTitle>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">{t("establishment_name")}</Label>
-              <Input id="name" name="name" value={formData.name} onChange={handleInputChange} required />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="address">{t("address")}</Label>
-              <div className="relative">
-                <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  id="address"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleInputChange}
-                  className="pl-10"
-                  required
-                />
+          {establishments.length === 0 ? (
+            <p className="text-center text-muted-foreground">{t("no_indications")}</p>
+          ) : (
+            <>
+              <div className="hidden md:block">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>{t("establishment_name")}</TableHead>
+                      <TableHead>{t("address")}</TableHead>
+                      <TableHead>{t("responsible_person")}</TableHead>
+                      <TableHead>{t("status")}</TableHead>
+                      <TableHead>{t("actions")}</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {establishments.map((establishment) => (
+                      <TableRow key={establishment.id}>
+                        <TableCell className="font-medium">{establishment.name}</TableCell>
+                        <TableCell>{establishment.address}</TableCell>
+                        <TableCell>{establishment.responsiblePerson}</TableCell>
+                        <TableCell>{getStatusBadge(establishment.status)}</TableCell>
+                        <TableCell>
+                          {establishment.status === "Enviado" && (
+                            <Button variant="ghost" size="sm">
+                              <Pencil className="h-4 w-4 mr-2" />
+                              {t("edit")}
+                            </Button>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
               </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="phone">{t("phone_number")}</Label>
-              <div className="relative">
-                <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  id="phone"
-                  name="phone"
-                  type="tel"
-                  value={formData.phone}
-                  onChange={handleInputChange}
-                  className="pl-10"
-                />
+              <div className="md:hidden">
+                <ScrollArea className="h-[400px]">
+                  {establishments.map((establishment) => (
+                    <div key={establishment.id} className="mb-4 p-4 border border-border rounded-lg">
+                      <div className="flex justify-between items-start mb-2">
+                        <div>
+                          <h3 className="font-medium">{establishment.name}</h3>
+                          <p className="text-sm text-muted-foreground">{establishment.address}</p>
+                        </div>
+                        {getStatusBadge(establishment.status)}
+                      </div>
+                      <p className="text-sm mb-2">{establishment.responsiblePerson}</p>
+                      <Button variant="ghost" size="sm" className="w-full justify-between">
+                        {t("view_details")}
+                        <ChevronRight className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ))}
+                </ScrollArea>
               </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="website">{t("website")}</Label>
-              <div className="relative">
-                <Globe className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  id="website"
-                  name="website"
-                  type="url"
-                  value={formData.website}
-                  onChange={handleInputChange}
-                  className="pl-10"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="description">{t("description")}</Label>
-              <Textarea
-                id="description"
-                name="description"
-                value={formData.description}
-                onChange={handleInputChange}
-                rows={4}
-                placeholder={t("describe_establishment")}
-              />
-            </div>
-
-            <Button type="submit" className="w-full">
-              {t("enviar_indicacao")}
-            </Button>
-          </form>
+            </>
+          )}
         </CardContent>
-      </Card>
+      </GlowingCard>
     </div>
   )
 }
